@@ -48,11 +48,24 @@ namespace htel
 
                     }
                 }
-                
-                Console.WriteLine("Enter yes/no to indicate whether you want room service:");
-                string roomService = Console.ReadLine();
-                roomservice[i] = roomService;
-                double cost=0;
+
+                string roomService;
+                while (true)
+                {
+                    Console.WriteLine("Enter yes/no to indicate whether you want room service:");
+                    roomService = Console.ReadLine().ToLower();
+                    if (roomService == "yes" || roomService == "no")
+                    {
+                        roomservice[i] = roomService;
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
+                    }
+                }
+
+                double cost =0;
                 //conditions for claculating the bill
                 if (NumberOfnight >= 1 && NumberOfnight <= 3)
                 {
