@@ -107,16 +107,17 @@ namespace htel
             }
 
             //displaying the data in form of table
-            Console.WriteLine("\t\t\tSummery of reservation");
-            Console.WriteLine("Name\t\t\tNumber of room\t\tRoom service\t\tCharge");
+            Console.WriteLine("\t\t\tSummary of Reservation");
+            Console.WriteLine("{0,-20} {1,-15} {2,-15} {3,10}", "Name", "Number of Nights", "Room Service", "Charge ($)");
             for (int j = 0; j < i; j++)
             {
-                Console.WriteLine(name [j]+ "\t\t\t"+ night[j]+"\t\t\t"+ roomservice[j]+"\t\t"+ costlist[j]);
+                Console.WriteLine("{0,-20} {1,-15} {2,-15} {3,10:N2}", name[j], night[j], roomservice[j], costlist[j]);
             }
 
 
+
             //check highest spending
-                double largest = costlist[0];
+            double largest = costlist[0];
             int ind = 0;
             for (int j = 1; j <i; j++)
             {
