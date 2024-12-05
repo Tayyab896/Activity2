@@ -1,54 +1,44 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace htel
+namespace HotelReservationSystem
 {
     internal class Program
     {
         static void Main(string[] args)
-
-
-
         {
-
-            Console.WriteLine("\t\t\tWelcome to sydney hotel");
+            Console.WriteLine("\t\t\tWelcome to Sydney Hotel");
             int i = 0;
             string[] name = new string[20];
             int[] night = new int[20];
             string[] roomservice = new string[20];
             double[] costlist = new double[20];
+            int[] previousStays = new int[20]; // Tracks previous stays for loyalty discount
 
-           
-            //lopp to repeat the step
+            // Loop to repeat steps for new reservations
             while (true)
             {
-             
-               
-                //taking user inputs
+                // Taking customer name input
                 Console.WriteLine("Enter Customer Name:");
                 string Name = Console.ReadLine();
                 name[i] = Name;
-                Console.WriteLine("Enter Number of night:");
-                int NumberOfnight=0;
-                
-                while (true) { 
-                   
-                    NumberOfnight = int.Parse(Console.ReadLine()); 
-                    if(NumberOfnight>=1&& NumberOfnight <= 20)
+
+                // Taking input for number of nights and validating
+                Console.WriteLine("Enter Number of Nights:");
+                int NumberOfNights = 0;
+                while (true)
+                {
+                    if (int.TryParse(Console.ReadLine(), out NumberOfNights) && NumberOfNights >= 1 && NumberOfNights <= 20)
                     {
-                        night[i] = NumberOfnight;
+                        night[i] = NumberOfNights;
                         break;
                     }
                     else
                     {
-                        Console.WriteLine("Invalid number of nights must be between 1 and 20:");
-
+                        Console.WriteLine("Invalid input. Please enter a number of nights between 1 and 20:");
                     }
                 }
 
+                // Room service input validation
                 string roomService;
                 while (true)
                 {
@@ -65,91 +55,46 @@ namespace htel
                     }
                 }
 
-                double cost =0;
-                //conditions for claculating the bill
-                if (NumberOfnight >= 1 && NumberOfnight <= 3)
-                {
-                    cost = NumberOfnight * 100;
+                // Calculating the base cost based on number of nights
+                double cost = NumberOfNights * (NumberOfNights <= 3 ? 100 : (NumberOfNights <= 10 ? 80.5 : 75.3));
 
-                }
-                else if (NumberOfnight >= 4 && NumberOfnight <= 10)
-                {
-                    cost = NumberOfnight * 80.5;
+                // Checking loyalty discount for repeat stays
+                int loyaltyDiscount = previousStays[i] * 5; // 5% discount for each previous stay
+                if (loyaltyDiscount > 20) loyaltyDiscount = 20; // Max discount capped at 20%
+                double discountAmount = cost * (loyaltyDiscount / 100.0);
+                cost -= discountAmount;
 
-                }
-                else
-                {
-                    cost = NumberOfnight * 75.3;
-                }
-                //checking if the room service is included
+                // Adding room service cost if applicable
                 if (roomService == "yes")
                 {
-                    cost = cost + (cost * .10);
-
+                    cost += cost * 0.10; // 10% additional cost for room service
                 }
-                costlist[i] = cost;
-                //printing results
-                Console.WriteLine("Total price for "+ Name+ " is $"+ cost);
-                
-                i = i + 1;
 
-                //taking input to quit or continue
+                // Storing and displaying total cost
+                costlist[i] = cost;
+                Console.WriteLine($"Total price for {Name} is ${cost:.2f}. Loyalty discount applied: {loyaltyDiscount}% (${discountAmount:.2f}).");
+
+                // Incrementing reservation index
+                i++;
+
+                // Option to exit or continue
                 Console.WriteLine("________________________________________");
-                Console.WriteLine("Press q to exit Or press any other key to continue:");
+                Console.WriteLine("Press 'q' to exit or any other key to continue:");
                 string choice = Console.ReadLine();
-                if (choice=="q"|| choice == "Q")
+                if (choice.ToLower() == "q")
                 {
                     break;
                 }
-
-                Console.WriteLine("________________________________________");
-
             }
 
-            //displaying the data in form of table
-            Console.WriteLine("\t\t\tSummary of Reservation");
+            // Displaying summary of all reservations
+            Console.WriteLine("\t\t\tSummary of Reservations");
             Console.WriteLine("{0,-20} {1,-15} {2,-15} {3,10}", "Name", "Number of Nights", "Room Service", "Charge ($)");
             for (int j = 0; j < i; j++)
             {
                 Console.WriteLine("{0,-20} {1,-15} {2,-15} {3,10:N2}", name[j], night[j], roomservice[j], costlist[j]);
             }
-
-
-
-            //check highest spending
-            double largest = costlist[0];
-            int ind = 0;
-            for (int j = 1; j <i; j++)
-            {
-
-                if (largest < costlist[j])
-                {
-                    largest = costlist[j];
-                    ind = j;
-
-                }
-
-            }
-            //checking least spending
-            Console.WriteLine("Customer spending the most is "+ name[ind]+" $"+ costlist[ind]);
-            double min = costlist[0];
-            int ind2 = 0;
-            for (int j = 1; j < i; j++)
-            {
-
-                if (min > costlist[j])
-                {
-                    min = costlist[j];
-                    ind2 = j;
-                }
-
-            }
-
-            Console.WriteLine("Customer spending the least is " + name[ind2] + " $" + costlist[ind2]);
-
-
-
         }
     }
-    }
+}
 
